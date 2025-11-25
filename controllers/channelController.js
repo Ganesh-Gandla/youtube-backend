@@ -73,37 +73,37 @@ export const getChannelVideos = async (req, res) => {
   }
 };
 
-// // -------------------- UPDATE CHANNEL (OWNER ONLY) --------------------
-// export const updateChannel = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+// -------------------- UPDATE CHANNEL (OWNER ONLY) --------------------
+export const updateChannel = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//     const channel = await Channel.findOne({ channelId: id });
+    const channel = await Channel.findOne({ channelId: id });
 
-//     if (!channel) {
-//       return res.status(404).json({ message: "Channel not found" });
-//     }
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
 
-//     // Only owner can update
-//     if (channel.owner !== req.user.userId) {
-//       return res.status(403).json({ message: "Not authorized to update" });
-//     }
+    // Only owner can update
+    if (channel.owner !== req.user.userId) {
+      return res.status(403).json({ message: "Not authorized to update" });
+    }
 
-//     const updated = await Channel.findOneAndUpdate(
-//       { channelId: id },
-//       req.body,
-//       { new: true }
-//     );
+    const updated = await Channel.findOneAndUpdate(
+      { channelId: id },
+      req.body,
+      { new: true }
+    );
 
-//     return res.status(200).json({
-//       message: "Channel updated successfully",
-//       channel: updated,
-//     });
-//   } catch (error) {
-//     console.error("Error in updateChannel:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
+    return res.status(200).json({
+      message: "Channel updated successfully",
+      channel: updated,
+    });
+  } catch (error) {
+    console.error("Error in updateChannel:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 
 // // -------------------- DELETE CHANNEL (OWNER ONLY) --------------------
 // export const deleteChannel = async (req, res) => {
