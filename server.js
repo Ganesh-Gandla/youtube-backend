@@ -4,6 +4,8 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
+import videoRoutes from "./routes/videoRoutes.js";
+
 
 
 dotenv.config();
@@ -25,6 +27,7 @@ app.get("/", (req, res) => {
 // Custom routes
 app.use("/api/auth", authRoutes);
 app.use("/api/channel", channelRoutes);
+app.use("/api/videos", videoRoutes);
 
 
 const PORT = process.env.PORT || 5100;
