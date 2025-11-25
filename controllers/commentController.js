@@ -49,3 +49,34 @@ export const getCommentsByVideo = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// -------------------- UPDATE COMMENT --------------------
+export const updateComment = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const { text } = req.body;
+
+    const comment = await Comment.findOne({ commentId });
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Only the original commenter can update
+    if (comment.userId !== req.user.userId) {
+      return res.status(403).json({ message: "Not authorized to update this comment" });
+    }
+
+    comment.text = text || comment.text;
+    await comment.save();
+
+    return res.status(200).json({
+      message: "Comment updated successfully",
+      comment,
+    });
+
+  } catch (error) {
+    console.error("Error in updateComment:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
