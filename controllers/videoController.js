@@ -175,3 +175,26 @@ export const dislikeVideo = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// -------------------- SEARCH VIDEOS BY TITLE --------------------
+export const searchVideos = async (req, res) => {
+  try {
+    const { title } = req.query;
+
+    if (!title) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    // Case-insensitive search using regex
+    const videos = await Video.find({
+      title: { $regex: title, $options: "i" }
+    });
+
+    return res.status(200).json(videos);
+
+  } catch (error) {
+    console.error("Error in searchVideos:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
