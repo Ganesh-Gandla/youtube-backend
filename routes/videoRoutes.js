@@ -6,7 +6,8 @@ import {
   updateVideo,
   deleteVideo,
   likeVideo,
-  dislikeVideo
+  dislikeVideo,
+  searchVideos
 } from "../controllers/videoController.js";
 
 import { protectRoute } from "../middleware/authMiddleware.js";
@@ -18,6 +19,9 @@ router.post("/", protectRoute, uploadVideo);
 
 // GET ALL VIDEOS (Public)
 router.get("/", getAllVideos);
+
+// Search Videos
+router.get("/search/title", searchVideos);
 
 // GET SINGLE VIDEO BY ID (Public)
 router.get("/:id", getVideoById);
@@ -33,5 +37,7 @@ router.put("/:id/like", protectRoute, likeVideo);
 
 // DISLIKE VIDEO (Protected)
 router.put("/:id/dislike", protectRoute, dislikeVideo);
+
+
 
 export default router;
