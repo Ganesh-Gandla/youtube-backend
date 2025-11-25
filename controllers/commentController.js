@@ -33,3 +33,19 @@ export const addComment = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+// -------------------- GET COMMENTS FOR A VIDEO --------------------
+export const getCommentsByVideo = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+
+    // Get all comments for this video
+    const comments = await Comment.find({ videoId }).sort({ createdAt: -1 });
+
+    return res.status(200).json(comments);
+
+  } catch (error) {
+    console.error("Error in getCommentsByVideo:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
