@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
+
 
 
 
@@ -28,6 +30,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/channel", channelRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/comments", commentRoutes);
+
 
 
 const PORT = process.env.PORT || 5100;
