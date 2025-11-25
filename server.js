@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import channelRoutes from "./routes/channelRoutes.js";
+
 
 dotenv.config();
 
@@ -18,6 +21,11 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("YouTube Clone Backend Running...");
 });
+
+// Custom routes
+app.use("/api/auth", authRoutes);
+app.use("/api/channel", channelRoutes);
+
 
 const PORT = process.env.PORT || 5100;
 app.listen(PORT, () => {
