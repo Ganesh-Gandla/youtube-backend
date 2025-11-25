@@ -53,25 +53,25 @@ export const getChannel = async (req, res) => {
   }
 };
 
-// // -------------------- GET ALL VIDEOS OF A CHANNEL --------------------
-// export const getChannelVideos = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+// -------------------- GET ALL VIDEOS OF A CHANNEL --------------------
+export const getChannelVideos = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//     const channel = await Channel.findOne({ channelId: id });
+    const channel = await Channel.findOne({ channelId: id });
 
-//     if (!channel) {
-//       return res.status(404).json({ message: "Channel not found" });
-//     }
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
 
-//     return res.status(200).json({
-//       videos: channel.videos,
-//     });
-//   } catch (error) {
-//     console.error("Error in getChannelVideos:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
+    return res.status(200).json({
+      videos: channel.videos,
+    });
+  } catch (error) {
+    console.error("Error in getChannelVideos:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 
 // // -------------------- UPDATE CHANNEL (OWNER ONLY) --------------------
 // export const updateChannel = async (req, res) => {
