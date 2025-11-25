@@ -105,33 +105,33 @@ export const updateChannel = async (req, res) => {
   }
 };
 
-// // -------------------- DELETE CHANNEL (OWNER ONLY) --------------------
-// export const deleteChannel = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+// -------------------- DELETE CHANNEL (OWNER ONLY) --------------------
+export const deleteChannel = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//     const channel = await Channel.findOne({ channelId: id });
+    const channel = await Channel.findOne({ channelId: id });
 
-//     if (!channel) {
-//       return res.status(404).json({ message: "Channel not found" });
-//     }
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
 
-//     // Only owner can delete
-//     if (channel.owner !== req.user.userId) {
-//       return res.status(403).json({ message: "Not authorized to delete" });
-//     }
+    // Only owner can delete
+    if (channel.owner !== req.user.userId) {
+      return res.status(403).json({ message: "Not authorized to delete" });
+    }
 
-//     await Channel.findOneAndDelete({ channelId: id });
+    await Channel.findOneAndDelete({ channelId: id });
 
-//     // Remove channel from user's channels array
-//     await User.findOneAndUpdate(
-//       { userId: req.user.userId },
-//       { $pull: { channels: id } }
-//     );
+    // Remove channel from user's channels array
+    await User.findOneAndUpdate(
+      { userId: req.user.userId },
+      { $pull: { channels: id } }
+    );
 
-//     return res.status(200).json({ message: "Channel deleted successfully" });
-//   } catch (error) {
-//     console.error("Error in deleteChannel:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
+    return res.status(200).json({ message: "Channel deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteChannel:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
