@@ -8,25 +8,31 @@ const userSchema = new mongoose.Schema(
       default: uuidv4,
       unique: true,
     },
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     username: {
       type: String,
-      required: [true, "Username is required"],
+      required: true,
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: true,
       unique: true,
       lowercase: true,
-      match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        "Please enter a valid email",
-      ],
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters"],
+      required: true,
+      minlength: 6,
     },
     avatar: {
       type: String,
@@ -40,6 +46,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 const User = mongoose.model("User", userSchema);
 

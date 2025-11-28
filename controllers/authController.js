@@ -7,24 +7,24 @@ import jwt from "jsonwebtoken";
 // ----------------------- REGISTER USER -----------------------
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
-    // Validate inputs
-    if (!username || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ message: "Email already registered" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
+    const username = `${firstName} ${lastName}`;
+
     const newUser = await User.create({
+      firstName,
+      lastName,
       username,
       email,
       password: hashedPassword,
@@ -43,6 +43,8 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 
 // ----------------------- LOGIN USER -----------------------
