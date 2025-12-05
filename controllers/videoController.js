@@ -62,7 +62,13 @@ export const getVideoById = async (req, res) => {
     video.views += 1;
     await video.save();
 
-    return res.status(200).json(video);
+    // Fetch channel using video.channelId
+    const channel = await Channel.findOne({ channelId: video.channelId });
+    if (!channel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    return res.status(200).json({video, channel});
   } catch (error) {
     console.error("Error in getVideoById:", error);
     return res.status(500).json({ message: "Server error" });

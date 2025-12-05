@@ -83,6 +83,7 @@ export const loginUser = async (req, res) => {
         userId: user.userId,
         username: user.username,
         email: user.email,
+        channels: user.channels || [],
       },
     });
   } catch (error) {
