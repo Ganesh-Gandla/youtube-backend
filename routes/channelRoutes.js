@@ -11,7 +11,7 @@ import { protectRoute } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // CREATE CHANNEL  (Protected)
-router.post("/", protectRoute, createChannel);
+router.post("/", protectRoute, createChannel); 
 
 // GET CHANNEL BY ID  (Public)
 router.get("/:id", getChannel);
