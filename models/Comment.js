@@ -18,6 +18,11 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true, // person who commented
     },
+    username: {
+      type: String,
+      required: true
+    },
+
 
     text: {
       type: String,

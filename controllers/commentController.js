@@ -10,14 +10,15 @@ export const addComment = async (req, res) => {
       return res.status(400).json({ message: "Video ID and comment text are required" });
     }
 
-    // Create comment
+    // Create comment with userId + username
     const newComment = await Comment.create({
       videoId,
       userId: req.user.userId,
+      username: req.user.username,      // <- Add username
       text
     });
 
-    // Add commentId to video's comments array
+    // Add commentId to video's comments[]
     await Video.findOneAndUpdate(
       { videoId },
       { $push: { comments: newComment.commentId } }
@@ -39,7 +40,6 @@ export const getCommentsByVideo = async (req, res) => {
   try {
     const { videoId } = req.params;
 
-    // Get all comments for this video
     const comments = await Comment.find({ videoId }).sort({ createdAt: -1 });
 
     return res.status(200).json(comments);
@@ -49,6 +49,7 @@ export const getCommentsByVideo = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // -------------------- UPDATE COMMENT --------------------
 export const updateComment = async (req, res) => {
