@@ -11,18 +11,23 @@ const commentSchema = new mongoose.Schema(
 
     videoId: {
       type: String,
-      required: true, // reference to video
+      required: true,
     },
 
     userId: {
       type: String,
-      required: true, // person who commented
-    },
-    username: {
-      type: String,
-      required: true
+      required: true,
     },
 
+    username: {
+      type: String,
+      required: true,
+    },
+
+    userAvatar: {
+      type: String,
+      default: "",
+    },
 
     text: {
       type: String,
@@ -30,10 +35,6 @@ const commentSchema = new mongoose.Schema(
       trim: true,
     },
 
-    timestamp: {
-      type: Date,
-      default: Date.now,
-    }
   },
   { timestamps: true }
 );
