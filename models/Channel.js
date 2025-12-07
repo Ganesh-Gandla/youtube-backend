@@ -25,6 +25,10 @@ const channelSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+     channelLogo: {
+      type: String,
+      default: "",
+    },
     subscribers: {
       type: Number,
       default: 0,

@@ -1,11 +1,12 @@
+// controllers/channelController.js
+
 import Channel from "../models/Channel.js";
 import User from "../models/User.js";
-
 
 // -------------------- CREATE CHANNEL --------------------
 export const createChannel = async (req, res) => {
   try {
-    const { channelName, description, channelBanner } = req.body;
+    const { channelName, description, channelBanner, channelLogo } = req.body;
 
     if (!channelName) {
       return res.status(400).json({ message: "Channel name is required" });
@@ -14,8 +15,9 @@ export const createChannel = async (req, res) => {
     // Create new channel
     const newChannel = await Channel.create({
       channelName,
-      description,
+      description: description || "",
       channelBanner: channelBanner || "",
+      channelLogo: channelLogo || "",
       owner: req.user.userId,
     });
 
@@ -64,9 +66,7 @@ export const getChannelVideos = async (req, res) => {
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    return res.status(200).json({
-      videos: channel.videos,
-    });
+    return res.status(200).json({ videos: channel.videos });
   } catch (error) {
     console.error("Error in getChannelVideos:", error);
     return res.status(500).json({ message: "Server error" });
@@ -89,15 +89,25 @@ export const updateChannel = async (req, res) => {
       return res.status(403).json({ message: "Not authorized to update" });
     }
 
-    const updated = await Channel.findOneAndUpdate(
+    // Extract only updatable fields from body
+    const { channelName, description, channelBanner, channelLogo } = req.body;
+
+    const updatedData = {
+      ...(channelName && { channelName }),
+      ...(description !== undefined && { description }),
+      ...(channelBanner !== undefined && { channelBanner }),
+      ...(channelLogo !== undefined && { channelLogo }),
+    };
+
+    const updatedChannel = await Channel.findOneAndUpdate(
       { channelId: id },
-      req.body,
+      updatedData,
       { new: true }
     );
 
     return res.status(200).json({
       message: "Channel updated successfully",
-      channel: updated,
+      channel: updatedChannel,
     });
   } catch (error) {
     console.error("Error in updateChannel:", error);
