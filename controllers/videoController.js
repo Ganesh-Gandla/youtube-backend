@@ -194,7 +194,10 @@ export const likeVideo = async (req, res) => {
     video.likes = (video.likes || 0) + 1;
     await video.save();
 
-    return res.status(200).json({ message: "Video liked", likes: video.likes });
+    return res.status(200).json({
+      message: "Video liked",
+      likes: video.likes
+    });
   } catch (error) {
     console.error("Error in likeVideo:", error);
     return res.status(500).json({ message: "Server error" });
@@ -210,7 +213,10 @@ export const dislikeVideo = async (req, res) => {
     video.dislikes = (video.dislikes || 0) + 1;
     await video.save();
 
-    return res.status(200).json({ message: "Video disliked", dislikes: video.dislikes });
+    return res.status(200).json({
+      message: "Video disliked",
+      dislikes: video.dislikes
+    });
   } catch (error) {
     console.error("Error in dislikeVideo:", error);
     return res.status(500).json({ message: "Server error" });
