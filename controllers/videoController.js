@@ -40,17 +40,20 @@ export const uploadVideo = async (req, res) => {
   }
 };
 
-/**
- * GET all videos (for home feed)
- * Each video will include channel data via aggregation lookup
- * Optional query params: limit, skip
- */
 export const getAllVideos = async (req, res) => {
   try {
-    const limit = req.query.limit ? parseInt(req.query.limit) : 0; // 0 = no limit
+    const { category } = req.query;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 0;
     const skip = req.query.skip ? parseInt(req.query.skip) : 0;
 
-    const pipeline = [
+    const pipeline = [];
+
+    // CATEGORY FILTER
+    if (category) {
+      pipeline.push({ $match: { category } });
+    }
+
+    pipeline.push(
       {
         $lookup: {
           from: "channels",
@@ -61,7 +64,7 @@ export const getAllVideos = async (req, res) => {
       },
       { $unwind: "$channel" },
       { $sort: { createdAt: -1 } }
-    ];
+    );
 
     if (skip) pipeline.push({ $skip: skip });
     if (limit) pipeline.push({ $limit: limit });
@@ -74,6 +77,7 @@ export const getAllVideos = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 /**
  * GET videos by channel (channel page)
