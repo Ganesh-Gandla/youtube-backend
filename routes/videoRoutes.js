@@ -1,3 +1,4 @@
+// routes/videoRoutes.js
 import express from "express";
 import {
   uploadVideo,
@@ -7,37 +8,24 @@ import {
   deleteVideo,
   likeVideo,
   dislikeVideo,
-  searchVideos
+  searchVideos,
+  getVideosByChannel
 } from "../controllers/videoController.js";
-
 import { protectRoute } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// UPLOAD VIDEO (Protected)
-router.post("/", protectRoute, uploadVideo);
+router.get("/", getAllVideos); // GET /api/videos
+router.get("/channel/:channelId", getVideosByChannel); // GET /api/videos/channel/:channelId
+router.get("/:id", getVideoById); // GET /api/videos/:id
 
-// GET ALL VIDEOS (Public)
-router.get("/", getAllVideos);
+router.post("/", protectRoute, uploadVideo); // POST /api/videos  (protected)
+router.put("/:id", protectRoute, updateVideo); // PUT /api/videos/:id
+router.delete("/:id", protectRoute, deleteVideo); // DELETE /api/videos/:id
 
-// Search Videos
-router.get("/search/title", searchVideos);
+router.post("/:id/like", protectRoute, likeVideo);
+router.post("/:id/dislike", protectRoute, dislikeVideo);
 
-// GET SINGLE VIDEO BY ID (Public)
-router.get("/:id", getVideoById);
-
-// UPDATE VIDEO (Protected + Owner Only)
-router.put("/:id", protectRoute, updateVideo);
-
-// DELETE VIDEO (Protected + Owner Only)
-router.delete("/:id", protectRoute, deleteVideo);
-
-// LIKE VIDEO (Protected)
-router.put("/:id/like", protectRoute, likeVideo);
-
-// DISLIKE VIDEO (Protected)
-router.put("/:id/dislike", protectRoute, dislikeVideo);
-
-
+router.get("/search/title", searchVideos); // GET /api/videos/search/title?title=foo
 
 export default router;
