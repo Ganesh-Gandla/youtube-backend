@@ -3,32 +3,36 @@
 import Channel from "../models/Channel.js";
 import User from "../models/User.js";
 
+
 // -------------------- CREATE CHANNEL --------------------
 export const createChannel = async (req, res) => {
   try {
     const { channelName, description, channelBanner, channelLogo } = req.body;
 
+    // Validate required fields
     if (!channelName) {
       return res.status(400).json({ message: "Channel name is required" });
     }
 
-    // Create new channel
+    // Create a new channel document
     const newChannel = await Channel.create({
       channelName,
       description: description || "",
       channelBanner: channelBanner || "",
       channelLogo: channelLogo || "",
-      owner: req.user.userId,
+      owner: req.user.userId, // Owner comes from logged-in user
     });
 
-    // Add channelId to user's channels array
+    // Add new channel ID to the user's channels list
     await User.findOneAndUpdate(
       { userId: req.user.userId },
       { $push: { channels: newChannel.channelId } }
     );
 
+    // Fetch updated user details
     const updatedUser = await User.findOne({ userId: req.user.userId });
 
+    // Send response with new channel + updated user info
     return res.status(201).json({
       message: "Channel created successfully",
       channel: newChannel,
@@ -46,17 +50,21 @@ export const createChannel = async (req, res) => {
   }
 };
 
+
+
 // -------------------- GET CHANNEL BY ID --------------------
 export const getChannel = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Find channel using channelId
     const channel = await Channel.findOne({ channelId: id });
 
     if (!channel) {
       return res.status(404).json({ message: "Channel not found" });
     }
 
+    // Send channel data
     return res.status(200).json(channel);
   } catch (error) {
     console.error("Error in getChannel:", error);
@@ -64,17 +72,21 @@ export const getChannel = async (req, res) => {
   }
 };
 
+
+
 // -------------------- GET ALL VIDEOS OF A CHANNEL --------------------
 export const getChannelVideos = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Check if channel exists
     const channel = await Channel.findOne({ channelId: id });
 
     if (!channel) {
       return res.status(404).json({ message: "Channel not found" });
     }
 
+    // Return only the videos array
     return res.status(200).json({ videos: channel.videos });
   } catch (error) {
     console.error("Error in getChannelVideos:", error);
@@ -82,23 +94,26 @@ export const getChannelVideos = async (req, res) => {
   }
 };
 
+
+
 // -------------------- UPDATE CHANNEL (OWNER ONLY) --------------------
 export const updateChannel = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Check if channel exists
     const channel = await Channel.findOne({ channelId: id });
 
     if (!channel) {
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    // Only owner can update
+    // Only the owner of the channel is allowed to update
     if (channel.owner !== req.user.userId) {
       return res.status(403).json({ message: "Not authorized to update" });
     }
 
-    // Extract only updatable fields from body
+    // Extract fields that can be updated
     const { channelName, description, channelBanner, channelLogo } = req.body;
 
     const updatedData = {
@@ -108,6 +123,7 @@ export const updateChannel = async (req, res) => {
       ...(channelLogo !== undefined && { channelLogo }),
     };
 
+    // Update channel and get the updated version
     const updatedChannel = await Channel.findOneAndUpdate(
       { channelId: id },
       updatedData,
@@ -124,11 +140,14 @@ export const updateChannel = async (req, res) => {
   }
 };
 
+
+
 // -------------------- DELETE CHANNEL (OWNER ONLY) --------------------
 export const deleteChannel = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Check channel exists
     const channel = await Channel.findOne({ channelId: id });
 
     if (!channel) {
@@ -140,9 +159,10 @@ export const deleteChannel = async (req, res) => {
       return res.status(403).json({ message: "Not authorized to delete" });
     }
 
+    // Delete channel from DB
     await Channel.findOneAndDelete({ channelId: id });
 
-    // Remove channel from user's channels array
+    // Remove channel from user's channel list
     await User.findOneAndUpdate(
       { userId: req.user.userId },
       { $pull: { channels: id } }
