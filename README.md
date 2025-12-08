@@ -1,5 +1,3 @@
----
-
 ```md
 # YouTube Clone – Backend (Node.js + Express + MongoDB)
 
