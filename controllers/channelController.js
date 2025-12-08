@@ -27,9 +27,18 @@ export const createChannel = async (req, res) => {
       { $push: { channels: newChannel.channelId } }
     );
 
+    const updatedUser = await User.findOne({ userId: req.user.userId });
+
     return res.status(201).json({
       message: "Channel created successfully",
       channel: newChannel,
+      user: {
+        userId: updatedUser.userId,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        channels: updatedUser.channels,
+        avatar: updatedUser.avatar
+      },
     });
   } catch (error) {
     console.error("Error in createChannel:", error);
