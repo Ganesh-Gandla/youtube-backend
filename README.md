@@ -12,7 +12,6 @@ It handles authentication, channels, videos, comments, likes, search, and secure
 - **MongoDB + Mongoose**
 - **JWT Authentication**
 - **bcryptjs** (Password hashing)
-- **multer** (File uploads if needed)
 - **UUID** (Unique IDs)
 
 ---
